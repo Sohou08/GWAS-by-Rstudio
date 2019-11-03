@@ -17,12 +17,6 @@ Les commandes suivantes permettent de positionner l'espace de travail dans le "b
 rm(list=ls())
 
 # déclarer le répertoire de travail 
-# POUR PORTABLE: 
-# setwd("/Users/pierre/Desktop/R/Blé GWAS EPO 2016")
-
-#POUR MAC FIXE LABO:
-setwd("/Users/berthomieu/zinc/équipe rapports-WEB-contrats/BEZEF/Abdoulaye BEYE/résultats/analyse_R")
-
 ```
 
 
@@ -32,7 +26,7 @@ Les différentes fonctions codées dans les différents scripts sont souvent les
 Il faut appeler/charger ces fonctions et librairies.
 
 ```{r}
-source("fonctions_EPO.r")
+source("fonctions_EPO.r")##create at the begining
 library(lattice)
 library(QTLRel)
 library(qqman)
