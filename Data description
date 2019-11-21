@@ -1,26 +1,12 @@
 
 # Préambule 
 
-Les lignées EPO ont été phenotypées sur plusieurs traits, depuis la forme des grains (morphométrie), les mesures NIRS, et pour leur teneur en Fer, en Zinc, en cuivre et en manganèse. Ce sont les grains de la récolte 2016 qui ont été considérés.
-Les donnees ont été produites par Abdoulaye Beye au labo BPMP et à AGAP au printemps 2017
-
-<I>pour exécuter les commandes, sélectionner les lignes d'intérêt et cliquer sur ctrl+enter ou pomme+enter. Vérifier que le réglage (icone engrenage dans l'en-tête de cette fenêtre, entre 'knit' et 'insert') est fixé sur 'Chunk output in console'</I>
-
-# Les sources et les données
-
-## Working directory
-
 Les commandes suivantes permettent de positionner l'espace de travail dans le "bon" répertoire source.
 
 ```{r}
 # Comment effacer la mémoire
 rm(list=ls())
 
-# déclarer le répertoire de travail 
-```
-
-
-## Les librairies et fonctions nécessaires au script
 
 Les différentes fonctions codées dans les différents scripts sont souvent les mêmes. Elles sont regroupées dans un fichier de fonctions (ici, c'est le fichier fonctions_EPO.r). 
 Il faut appeler/charger ces fonctions et librairies.
@@ -36,14 +22,13 @@ library(igraph)
 ## Importation des données de phénotypage
 
 Le fichier complet assemblé est là: 
-"/Users/berthomieu/zinc/équipe rapports-WEB-contrats/BEZEF/Abdoulaye BEYE/résultats/analyse_R/donnees_phenotypiques_completes.csv"
+
 Il faut le "reconfigurer" au format R (instruction read.table)
 l'usage de la variable 'file' est "temporaire" au sens où c'est juste pour simplifier l'écriture de la commande read.table.
 Le fichier créé et sur lequel on travaille s'appelle maintenant GRAINS et les commandes dim, names et head ont "seulement" pour intérêt de vérifier que l'importation des données dans GRAINS est OK. 
 
 ```{r}
 # manip Mesure sur les grains 
-file<-"/Users/berthomieu/zinc/équipe rapports-WEB-contrats/BEZEF/Abdoulaye BEYE/résultats/analyse_R/donnees_phenotypiques_completes.csv"
 
 GRAINS<-read.table(file, header=TRUE, sep=";", dec=".")
 
