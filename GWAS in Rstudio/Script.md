@@ -15,11 +15,6 @@ library(igraph)
 
 ## Importation data
 
-Le fichier complet assemblé est là: 
-
-Il faut le "reconfigurer" au format R (instruction read.table)
-l'usage de la variable 'file' est "temporaire" au sens où c'est juste pour simplifier l'écriture de la commande read.table.
-Le fichier créé et sur lequel on travaille s'appelle maintenant GRAINS et les commandes dim, names et head ont "seulement" pour intérêt de vérifier que l'importation des données dans GRAINS est OK. 
 
 ```{r}
 # Importation data
@@ -32,7 +27,9 @@ head(GRAINS,1)
 
 ```
 
-## préparation du fichier de données
+## Preparation data
+Modify the name of the first row in order 
+
 on modifie le nom de la colonne listant les noms de lignées pour qu'elle soit compatible avec celle du fichier de données de génotypage pour l'analyse GWAS.
 Puis surtout, on "choisit" quelles traits/variables on veut étudier.
 En outre, on réalise les moyennes des mesures qui ont été répétées (NIRS)
