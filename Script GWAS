@@ -1,16 +1,8 @@
-Purpose: Genetic determinant of phytate seed of wheat accross GWAS
+Purpose: Genetic determinism of one trait through GWAS approach
 
 
-Les commandes suivantes permettent de positionner l'espace de travail dans le "bon" répertoire source.
-
-Commande following allow you to 
-```{r}
-# Comment effacer la mémoire
+#Clean memory
 rm(list=ls())
-
-
-Les différentes fonctions codées dans les différents scripts sont souvent les mêmes. Elles sont regroupées dans un fichier de fonctions (ici, c'est le fichier fonctions_EPO.r). 
-Il faut appeler/charger ces fonctions et librairies.
 
 ```{r}
 source("fonctions_EPO.r")##create at the begining
@@ -20,7 +12,7 @@ library(qqman)
 library(igraph)
 ```
 
-## Importation des données de phénotypage
+## Importation data
 
 Le fichier complet assemblé est là: 
 
@@ -29,7 +21,7 @@ l'usage de la variable 'file' est "temporaire" au sens où c'est juste pour simp
 Le fichier créé et sur lequel on travaille s'appelle maintenant GRAINS et les commandes dim, names et head ont "seulement" pour intérêt de vérifier que l'importation des données dans GRAINS est OK. 
 
 ```{r}
-# manip Mesure sur les grains 
+# Importation data
 
 GRAINS<-read.table(file, header=TRUE, sep=";", dec=".")
 
