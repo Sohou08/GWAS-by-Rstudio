@@ -1,8 +1,9 @@
+Purpose: Genetic determinant of phytate seed of wheat accross GWAS
 
-# Préambule 
 
 Les commandes suivantes permettent de positionner l'espace de travail dans le "bon" répertoire source.
 
+Commande following allow you to 
 ```{r}
 # Comment effacer la mémoire
 rm(list=ls())
