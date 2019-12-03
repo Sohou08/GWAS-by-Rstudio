@@ -1,8 +1,7 @@
 
-Purpose: Genetic determinism of one trait through GWAS approach
+__Purpose: Genetic determinism of one trait through GWAS approach : Data description__
 
 
-#Clean memory
 rm(list=ls())
 
 ```{r}
@@ -27,101 +26,28 @@ head(GRAINS,1)
 
 ```
 
-## Preparation data
-Modify the name of the first row in order 
-
-on modifie le nom de la colonne listant les noms de lignées pour qu'elle soit compatible avec celle du fichier de données de génotypage pour l'analyse GWAS.
-Puis surtout, on "choisit" quelles traits/variables on veut étudier.
-En outre, on réalise les moyennes des mesures qui ont été répétées (NIRS)
+###### phenotypic data ######
 
 ```{r}
-# On renomme la première colonne pour qu'elle ait le meme nom que sur le fichier de genotypes
+# Rename the first column which having the same name of the first column of genotypes files 
 names(GRAINS)[1]<-"Code.unique.2010"
-
-# Juste pour voir, on liste les noms des lignées présents dans la colonne code.unique.2010
-GRAINS[,1]
-
-# Création d'une base de données (DATA) qui ne contient qu'un sous-ensemble des colonnes (donc des données de phénoytpage) du tableau complet initial
-DATA<-GRAINS[,c(1:12, 15:16, 19:20, 23, 26, 25, 30, 116)]
-
-# réalisation des moyennes entre les deux mesures de protéine mesurées à partir d'un lot de grains abondants (GA) d'une part, et du lot de grains réduit à partir duquel les broyages ont été faits (GB) d'autre part. Réalisation des moyennes entre les deux mesures de jaune, de mitadin, puis de PS. Les valeurs sont créées dans des colonnes nouvelles situées à la suite de la dernière colonne.
-DATA$ProteineGA<-(DATA$proteines_1 + DATA$proteines_2 )/2
-DATA$ProteineGR<-(DATA$proteines_3 + DATA$proteines_4 )/2
-DATA$Jaune <-(DATA[,15]+ DATA[,16] )/2
-DATA$Mitadin <-(DATA[,13]+ DATA[,14] )/2
-DATA$PS <-(DATA[,11]+ DATA[,12] )/2
-
-#suppression des données "brutes" initiales pour ne conserver que les moyennes
-DATA<-DATA[,c(1:6, 17:ncol(DATA))]
-names(DATA)
 ```
-
-# Exploration des données phenotypiques
-
-## Distribution des caractères
+## Distribution trait
 
 ```{r}
-# pour regarder tous les histogrammes des distributions des variables
-for ( i in 2:ncol(DATA)) { hist(DATA[,i], main=names(DATA)[i]) }
-
-#diagrammes 2 à 2 
+# look the distributions of all variables 
+for ( i in 2:ncol(DATA)) { hist(DATA[,i], main=names(DATA)[i]) , freq= FALSE}
+#hist in pairs
 pairs(DATA[,c(2:ncol(DATA) )])
 
 ```
 
-## Quels sont les caractères corrélés au Fer et au Zinc ?
-
+## Correlation traits, Outlier , replace outlier by NA and delete NA values 
 ```{r}
 cor(DATA[,-1], DATA[,"Zn"], use="pairwise.complete.obs")
 cor(DATA[,-1], DATA[,"Fe"], use="pairwise.complete.obs")
-
-```
-
-## Recherche du point bizarre sur Zn/Fe 
-
-```{r}
-DATA$ZN_FE<- DATA$Zn / DATA$Fe
-hist(DATA$Zn.Fe)
-
 DATA[which(DATA$Zn.Fe > 4 ),]
-
-hist(DATA$Zn)
-hist(DATA$Fe)
-
-plot(DATA$Zn, DATA$Fe)
-plot(DATA$Zn.Fe, DATA$ZN_FE)
-
-# Remplacer une valeur aberrante
 DATA$Fe[which(DATA$Zn.Fe > 4 )]<-NA
-
-
-# Recalcul de la variable
-DATA$Zn.Fe<- DATA$Zn / DATA$Fe
-
-hist(DATA$Zn.Fe)
-
-
-cor(DATA[,-1], DATA[,"Zn"], use="pairwise.complete.obs")
-cor(DATA[,-1], DATA[,"Fe"], use="pairwise.complete.obs")
-cor(DATA[,"Fe"], DATA[,"Fe"]/DATA[,"Zn"])
-
-```
-
-## Recherche de variables synthétiques
-
-```{r}
-
-# quelles sont les données manquantes
- 
-
-DATA_sub<-DATA[which(!is.na(DATA$Fe)),]
-dim(DATA)
-dim(DATA_sub)
-
-DATA_sub<-DATA_sub[which(!is.na(DATA_sub$Zn)),]
-DATA_sub<-DATA_sub[-1,]
-
-head(DATA_sub, 50)
 
 names(DATA)
 for (i in 2:ncol(DATA_sub)) { 
@@ -129,115 +55,43 @@ for (i in 2:ncol(DATA_sub)) {
    DATA_sub<-DATA_sub[which(!is.na(DATA_sub[,i])),]
    
   }
+```
 
+## Search synthetics variables
 
-cor(DATA_sub[,-1], DATA_sub[,"Zn"], use="pairwise.complete.obs")
-cor(DATA_sub[,-1], DATA_sub[,"Fe"], use="pairwise.complete.obs")
-cor(DATA_sub[,"Fe"], DATA_sub[,"Fe"]/DATA_sub[,"Zn"])
-cor(DATA_sub[,"Zn"], DATA_sub[,"Fe"]/DATA_sub[,"Zn"])
+```{r}
 
-plot(DATA_sub[,"Cu"], DATA_sub[,"Zn"])
-plot(log10(DATA_sub[,"Zn"]), log10(DATA_sub[,"Fe"]))
-plot(log10(DATA_sub[,"Cu"]), log10(DATA_sub[,"Fe"]))
-plot(log10(DATA_sub[,"Cu"]), log10(DATA_sub[,"Zn"]))
-
-
-m1<-lm(DATA_sub[,"Cu"] ~ DATA_sub[,"Fe"] )
-
-A<-DATA_sub[,"Fe"]^2
-
-m2<-lm(DATA_sub[,"Cu"] ~ DATA_sub[,"Fe"] + A )
-
+m1<-lm(DATA[,"Cu"] ~ DATA[,"Fe"] )
+A<-DATA[,"Fe"]^2
+m2<-lm(DATA[,"Cu"] ~ DATA[,"Fe"] + A )
 anova(m1,m2)
-
-
 # Pricipal Components Analysis
 # entering raw data and extracting PCs
 # from the correlation matrix
 
-fit <- princomp(DATA_sub[,2:ncol(DATA_sub)], cor=TRUE)
+fit <- princomp(DATA[,2:ncol(DATA_sub)], cor=TRUE)
 
 summary(fit) # print variance accounted for
 loadings(fit) # pc loadings
 plot(fit,type="lines") # scree plot
 fit$scores # the principal components
-biplot(fit) 
-
-
-# comment se faire une idée sur des données simulées
-Zn<-rnorm(1000, mean=10, sd=1)
-Fe<-0.7*Zn + rnorm(1000, mean=0, sd=0.01)
-
-hist(Zn)
-hist(Fe)
-plot(Zn, Fe)
-
-cor(Zn, Fe)
-
-cor(Zn, Fe/Zn)
+biplot(fit)
 
 ```
-
-
-
-## Fichier de génotypes prêt à l'emploi
-Le fichier contenantles données Axiom pour 168 K SNP a été préparé pour cette manipe spécifique.
-L'objet généré s'appelle G_EPO.
+###### Genotype data ######
 
 ```{r}
-
 load("G_EPO.Rdata")
 dim(G_EPO)
 
-```
-
-# Elimination des MAFS
-## Calcul des fréquences alleliques
-
-Nous pouvons calculer les fréquences alléliques sur la matrice de lignées non redondantes et observer leur distribution.
-
-```{r}
+##Compute minor allelic frequency 
 Freq_EPO<-freqall(G_EPO)
-hist(Freq_EPO, main="Distribution des fréquences alléliques")
+hist(Freq_EPO, main="Distribution of minor  allelic")
 
-```
-
-Les minor alleles frequencies sont supprimées pour un seuil de 5% ce qui fait à peu près 10 individus minimum 
-
-```{r}
+# Delete Minor allelic frequency for 5% threshold
 MAF<-which(Freq_EPO<0.05|Freq_EPO>0.95)
 G_EPO<-G_EPO[,-MAF]
 dim(G_EPO)
-
-```
-
-# remplacement des données manquantes
-```{r}
-
-nom_row<-rownames(G_EPO)
-nom_col<-colnames(G_EPO)
-
-G_EPO<-apply(G_EPO,MARGIN=2,FUN=tirage)
-dim(G_EPO)
-
-rownames(G_EPO)<-nom_row
-colnames(G_EPO)<-nom_col
-
-
-```
-
-Nous pouvons re calculer les fréquences alléliques et observer leur distribution.
-
-```{r}
-Freq_EPO<-freqall(G_EPO)
-hist(Freq_EPO)
-
-
-```
-
-
-## La matrice G est la matrice des génotypes
-```{r}
 
 # QTL Rel demande des formats AA, BB et AB
 GA<-G_EPO
@@ -246,30 +100,17 @@ GA<-as.matrix(GA)
 GA[which(GA==0)]<-"AA"
 GA[which(GA==1)]<-"AB"
 GA[which(GA==2)]<-"BB"
-
 ```
 
-
-## Fusion des fichiers des  valeurs phénotypiques et des génotypes
-
-Les deux fichiers sont fusionnés ensemble par la fonction merge et le nom EPO utilisé comme clef de tri.
+###### Merger data phenotype and genotype ######
 
 ```{r}
 names(DATA)
 head(rownames(G_EPO),1)
-
-# le rang de rownames dans l'ordre des colonnes est 0, d ou le by.y=0
-# le rang de la variable nom dans GRAINS est 1 d'ou le by.x=1
 PG<-merge(DATA, GA, by.x=1, by.y=0)
 dim(PG)
-
 PG[1:3, 1:10]
-
-
 ```
-
-La matrice PG comporte à ce stade 180 lignées et 97 494 marqueurs.
-
 
 # GWAS & le calcul des pvalues
 
