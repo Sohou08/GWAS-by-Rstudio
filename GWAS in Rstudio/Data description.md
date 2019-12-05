@@ -1,5 +1,5 @@
 
-__Purpose: Genetic determinism of one trait through GWAS approach : Data description__
+#### Purpose: Genetic determinism of one trait through GWAS approach : Data description ####
 
 
 rm(list=ls())
@@ -12,7 +12,7 @@ library(qqman)
 library(igraph)
 ```
 
-## Importation data ##
+# Importation data #
 ```{r}
 # Importation data
 
@@ -24,13 +24,13 @@ head(GRAINS,1)
 
 ```
 
-## phenotypic data ##
+# phenotypic data #
 
 ```{r}
 # Rename the first column which having the same name of the first column of genotypes files 
 names(GRAINS)[1]<-"Code.unique.2010"
 ```
-## Distribution trait ##
+# Distribution trait #
 
 ```{r}
 # distributions of all variables 
@@ -40,7 +40,7 @@ pairs(DATA[,c(2:ncol(DATA) )])
 
 ```
 
-## Correlation traits, Outlier , replace outlier by NA and delete NA values ##
+# Correlation traits, Outlier , replace outlier by NA and delete NA values #
 ```{r}
 cor(DATA[,-1], DATA[,"Zn"], use="pairwise.complete.obs")
 cor(DATA[,-1], DATA[,"Fe"], use="pairwise.complete.obs")
@@ -55,7 +55,7 @@ for (i in 2:ncol(DATA_sub)) {
   }
 ```
 
-## Search the synthetics variables ##
+# Search the synthetics variables #
 
 ```{r}
 
@@ -76,7 +76,7 @@ fit$scores # the principal components
 biplot(fit)
 
 ```
-## Genotype data ##
+# Genotype data #
 
 ```{r}
 load("G_EPO.Rdata")
@@ -100,7 +100,7 @@ GA[which(GA==1)]<-"AB"
 GA[which(GA==2)]<-"BB"
 ```
 
-## Merge phenotype and genotype data ##
+# Merge phenotype and genotype data #
 
 ```{r}
 names(DATA)
