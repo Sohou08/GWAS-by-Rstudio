@@ -1,5 +1,5 @@
 
-#### Purpose: Genetic determinism of one trait through GWAS approach : Data description ####
+# Purpose: Genetic determinism of one trait through GWAS approach : Data description #
 
 
 rm(list=ls())
