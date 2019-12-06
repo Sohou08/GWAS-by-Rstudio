@@ -1,4 +1,5 @@
-# GWAS & le calcul des pvalues
+
+# Purpose: Genetic determinism of one trait through GWAS approach : GWAS analysis #
 
 
 ```{r}
