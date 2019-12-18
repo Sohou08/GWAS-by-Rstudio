@@ -1,75 +1,52 @@
 
-# Purpose: Genetic determinism of one trait through GWAS approach : Data description #
+# Purpose: Genetic determinism of one trait through GWAS approach #
 
 
 rm(list=ls())
 
 ```{r}
-source("fonctions_EPO.r")##create at the begining
 library(lattice)
 library(QTLRel)
 library(qqman)
 library(igraph)
 ```
-
-#### Importation data ####
+#### Data import: phenotypic data ####
 ```{r}
-# Importation data
-
 GRAINS<-read.table(file, header=TRUE, sep=";", dec=".")
-
 dim(GRAINS)
 names(GRAINS)
 head(GRAINS,1)
-
-```
-
-#### phenotypic data ####
-
-```{r}
-# Rename the first column which having the same name of the first column of genotypes files 
 names(GRAINS)[1]<-"Code.unique.2010"
-```
-#### Distribution trait ####
-
-```{r}
 # distributions of all variables 
 for ( i in 2:ncol(DATA)) { hist(DATA[,i], main=names(DATA)[i]) , freq= FALSE}
+
 #hist in pairs
 pairs(DATA[,c(2:ncol(DATA) )])
 
-```
-
-#### Correlation traits, Outlier , replace outlier by NA and delete NA values ####
+#Correlation traits, Outlier , replace outlier by NA and delete NA values ####
 ```{r}
 cor(DATA[,-1], DATA[,"Zn"], use="pairwise.complete.obs")
 cor(DATA[,-1], DATA[,"Fe"], use="pairwise.complete.obs")
 DATA[which(DATA$Zn.Fe > 4 ),]
 DATA$Fe[which(DATA$Zn.Fe > 4 )]<-NA
-
 names(DATA)
 for (i in 2:ncol(DATA_sub)) { 
-  
    DATA_sub<-DATA_sub[which(!is.na(DATA_sub[,i])),]
-   
   }
 ```
 
 #### Search the synthetics variables ####
 
 ```{r}
-
 m1<-lm(DATA[,"Cu"] ~ DATA[,"Fe"] )
 A<-DATA[,"Fe"]^2
 m2<-lm(DATA[,"Cu"] ~ DATA[,"Fe"] + A )
 anova(m1,m2)
-# Pricipal Components Analysis
+# Principal Components Analysis
 # entering raw data and extracting PCs
 # from the correlation matrix
-
 fit <- princomp(DATA[,2:ncol(DATA_sub)], cor=TRUE)
-
-summary(fit) # print variance accounted for
+summary(fit) # print variance accounted 
 loadings(fit) # pc loadings
 plot(fit,type="lines") # scree plot
 fit$scores # the principal components
@@ -81,7 +58,6 @@ biplot(fit)
 ```{r}
 load("G_EPO.Rdata")
 dim(G_EPO)
-
 ##Compute minor allelic frequency 
 Freq_EPO<-freqall(G_EPO)
 hist(Freq_EPO, main="Distribution of minor  allelic")
@@ -91,7 +67,7 @@ MAF<-which(Freq_EPO<0.05|Freq_EPO>0.95)
 G_EPO<-G_EPO[,-MAF]
 dim(G_EPO)
 
-# QTL Rel demande des formats AA, BB et AB
+# QTL Rel request AA, BB et AB format
 GA<-G_EPO
 GA<-as.matrix(GA)
 
