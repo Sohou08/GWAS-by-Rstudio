@@ -1,5 +1,5 @@
 
-## GBLUP BY mixed.model
+## GBLUP by mixed.model
 ```{r}
 rm(list = ls());gc()
 
