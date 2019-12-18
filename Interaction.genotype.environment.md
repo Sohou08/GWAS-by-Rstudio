@@ -186,12 +186,13 @@ abline(v=mean(moy_env), lty=2)
 ```
 
 ## GGEBiplot
-
+```{r}
 library(GGEBiplots)
 GGE<-GGEModel(Soh)### Soh is the matrix having the mean of each genotype in each environment
 MeanStability(GGE)
 WhichWon(GGE)
 DiscRep(GGE)
 RankEnv(GGE)
+```
 
 
