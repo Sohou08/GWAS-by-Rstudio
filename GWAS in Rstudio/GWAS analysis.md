@@ -1,9 +1,9 @@
 
-# Purpose: Genetic determinism of one trait through GWAS approach : GWAS analysis #
+# Purpose: Genetic determinism of one trait through GWAS approach  #
 
 
 ```{r}
-# In case of many variable, choice one variable for working
+# In case ofseveral variables, possibility to choice one variable as folling:
 i<-4
 Y<-PG[,i]
 liste<- which(!(is.na(Y)))
@@ -25,7 +25,7 @@ I<-diag(length(Y))
 hist(K$AA)
 ```
 
-#### Compute the variance of each components and estimation of covariance ####
+#### Compute the variance of each components ####
 
 This model estimate the additive and environnmental variance.
 ```{r}
@@ -48,7 +48,6 @@ save(pval.mod1, file=file, compress= TRUE)
 
 #### Aftertreatment ####
 
-
 ```{r}
 library("data.table")
 library(ggplot2)
@@ -61,32 +60,18 @@ library(qvalue)
 ```
 
 #### P-value Data ####
-Il s'agit là de récuperer pour l instant simplement les noms des variables étudiées
-
 
 ```{r}
 varnom <- "moy_prot"
 
 file<-paste("GRAINS_GWAS.mod1_",varnom,".Rdata", sep="")
-
 load(file)
-
 pvalues<-GWAS.mod1$p
 length(GWAS.mod1$p)
-
 pval.mod1<-data.frame(Marker_ID=names(GWAS.mod1$p),pvalue=pvalues)
-
-
-```
-
-####  P-value the most significatif ####
-```{r}
-
 min(pval.mod1$pvalue)
 #Distribution of p-values
 hist(pval.mod1$pvalue,nclass=20, main=paste("Pvalues on ", varnom, sep=""))
-
-
 ```
 
 #### qvalues ####
@@ -107,16 +92,13 @@ hist(qobj)
 qq(pval.mod1$pvalue,main=paste("QQplot on", varnom, sep=""))
 ```
 
+####  Exploration of interested p-value ####
 
-####  Exploration of interested value ####
 ```{r}
-
 # threshold à 4
 seuil.mod1<--log10(0.0001)
-
 assoc.mod1<-pval.mod1[-log10(pval.mod1$pvalue)>=seuil.mod1,]
 dim(assoc.mod1)
-
 # hist of positive value
 hist(-log10(assoc.mod1[,2]), 
      main = paste("Distribution du -log de la pvalue pour ",varnom,sep=""),
@@ -124,7 +106,6 @@ hist(-log10(assoc.mod1[,2]),
      ylab= " Effectif" ,
      col="blue", border="white")
 ```
-
 
 #### Position of marker according the study specie ####
 
