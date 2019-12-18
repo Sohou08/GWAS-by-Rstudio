@@ -1,6 +1,6 @@
 ## Library 
-library(dplyr)
-library(FactoMineR)
+#library(dplyr)
+#library(FactoMineR)
 
 ## Description data, manage NA ##
 
