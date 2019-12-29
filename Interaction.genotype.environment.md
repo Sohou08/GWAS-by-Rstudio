@@ -59,7 +59,7 @@ plot(fit) #
 plot<-heatmap(as.matrix(test), Colv = NA, Rowv = NA, scale="row", xlab="environnement", ylab="mat?riel", main="heatmap")
 ```
 
-#### ECOLVALENCE
+#### ECOVALENCE
 ```{r}
 IQFF<-as.matrix(Soh) ##Soh is the matrix having the mean of each genotype in each environment
 nblieu<-ncol(IQFF)
