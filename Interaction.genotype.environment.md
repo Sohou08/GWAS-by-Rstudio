@@ -46,7 +46,7 @@ write.table(Soh, file="traitIGxE.csv", sep=";")
 library(missForest)
 data<-missForest(Soh)
 data$OOBerror #criterion NRMSE is used to evaluate the precision of the imputation
-test<-data$ximp ## extract imputed data
+test<-data$ximp ## extract inputed data
 one<-t(test)
 ```
 
@@ -54,7 +54,7 @@ one<-t(test)
 ```{r}
 cs<-scale(one, center = TRUE, scale = TRUE) 
 d1<- dist(cs, method = "euclidean") 
-fit<- hclust(d1) # fait le dendrogramme 
+fit<- hclust(d1) # 
 plot(fit) # 
 plot<-heatmap(as.matrix(test), Colv = NA, Rowv = NA, scale="row", xlab="environnement", ylab="mat?riel", main="heatmap")
 ```
