@@ -1,6 +1,4 @@
 
-```
-
 ## Glup Cross model
 ```{r}
 rm(list=ls()); gc()
