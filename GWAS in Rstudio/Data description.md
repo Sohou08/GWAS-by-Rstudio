@@ -1,16 +1,16 @@
 
-# Purpose: Genetic determinism of one trait through GWAS approach #
-
-
-rm(list=ls())
+# Genetic determinism of one trait through GWAS approach #
 
 ```{r}
+# Clean environment
+rm(list=ls())
+# Call library 
 library(lattice)
 library(QTLRel)
 library(qqman)
 library(igraph)
 ```
-#### Data import: phenotypic data ####
+## Prepare phenotypic data ##
 ```{r}
 GRAINS<-read.table(file, header=TRUE, sep=";", dec=".")
 dim(GRAINS)
@@ -35,7 +35,7 @@ for (i in 2:ncol(DATA_sub)) {
   }
 ```
 
-#### Search the synthetics variables ####
+### Search synthetics variables ###
 
 ```{r}
 m1<-lm(DATA[,"Cu"] ~ DATA[,"Fe"] )
@@ -53,7 +53,7 @@ fit$scores # the principal components
 biplot(fit)
 
 ```
-#### Genotype data ####
+### Genotype data ###
 
 ```{r}
 load("G_EPO.Rdata")
