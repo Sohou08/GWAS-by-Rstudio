@@ -48,12 +48,13 @@ anova(m1,m2)
 fit <- princomp(DATA[,2:ncol(DATA_sub)], cor=TRUE)
 summary(fit) # print variance accounted 
 loadings(fit) # pc loadings
-plot(fit,type="lines") # scree plot
+plot(fit,type="lines") 
 fit$scores # the principal components
 biplot(fit)
 
 ```
-### Genotype data ###
+ 
+ ## Prepare Genotype data ##
 
 ```{r}
 load("G_EPO.Rdata")
@@ -76,7 +77,7 @@ GA[which(GA==1)]<-"AB"
 GA[which(GA==2)]<-"BB"
 ```
 
-#### Merge phenotype and genotype data ####
+## Merge phenotype and genotype data ##
 
 ```{r}
 names(DATA)
