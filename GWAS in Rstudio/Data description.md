@@ -1,5 +1,5 @@
 
-# Genetic determinism of one trait through GWAS approach #
+# Genetic determinism of one trait through GWAS approach (Section 1) #
 
 ```{r}
 # Clean environment
