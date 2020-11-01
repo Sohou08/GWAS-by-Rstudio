@@ -1,5 +1,5 @@
 
-# Purpose: Genetic determinism of one trait through GWAS approach  #
+# Genetic determinism of one trait through GWAS approach (Section 2) #
 
 
 ```{r}
@@ -14,7 +14,7 @@ G<-PG[liste, 18:dim(PG)[2]]
 length(Y)
 ```
 
-#### Compute Kinship ####
+## Compute Kinship ##
 
 ```{r}
 # genMatrix function of QTLRel make the compute of matrix
@@ -25,7 +25,7 @@ I<-diag(length(Y))
 hist(K$AA)
 ```
 
-#### Compute the variance of each components ####
+## Compute the variance of each components ##
 
 This model estimate the additive and environnmental variance.
 ```{r}
@@ -46,7 +46,7 @@ file<-paste("GRAINS.pval.mod1_",varnom,".Rdata", sep="")
 save(pval.mod1, file=file, compress= TRUE)
 ```
 
-#### Aftertreatment ####
+## Import library ##
 
 ```{r}
 library("data.table")
@@ -59,26 +59,25 @@ library("devtools")
 library(qvalue)
 ```
 
-#### P-value Data ####
+## Get P-value ##
 
 ```{r}
 varnom <- "moy_prot"
-
 file<-paste("GRAINS_GWAS.mod1_",varnom,".Rdata", sep="")
 load(file)
 pvalues<-GWAS.mod1$p
 length(GWAS.mod1$p)
 pval.mod1<-data.frame(Marker_ID=names(GWAS.mod1$p),pvalue=pvalues)
 min(pval.mod1$pvalue)
-#Distribution of p-values
+# Distribution of p-values
 hist(pval.mod1$pvalue,nclass=20, main=paste("Pvalues on ", varnom, sep=""))
 ```
 
-#### qvalues ####
+## Get q-values ##
+
 ```{r}
 pvalues<-pval.mod1$pvalue
 qobj<-qvalue(p=pvalues)
-
 summary(qobj)
 # Controle of Fdr rate
 #qobj<-qvalue(p=pvalues, fdr.level=0.1)
@@ -92,7 +91,7 @@ hist(qobj)
 qq(pval.mod1$pvalue,main=paste("QQplot on", varnom, sep=""))
 ```
 
-####  Exploration of interested p-value ####
+##  Explore interested p-value ##
 
 ```{r}
 # threshold à 4
@@ -107,7 +106,7 @@ hist(-log10(assoc.mod1[,2]),
      col="blue", border="white")
 ```
 
-#### Position of marker according the study specie ####
+## Position of marker according to the study specie ##
 
 ```{r}
 file_Phys_DRW<-"BREEDWHEAT_on_durum_physic.Rdata"
