@@ -3,7 +3,7 @@
 
 
 ```{r}
-# In case ofseveral variables, possibility to choice one variable as folling:
+# Among multiple variables, one of them could be selected as following:
 i<-4
 Y<-PG[,i]
 liste<- which(!(is.na(Y)))
@@ -17,27 +17,25 @@ length(Y)
 ## Compute Kinship ##
 
 ```{r}
-# genMatrix function of QTLRel make the compute of matrix
-# 1000 markers
+# genMatrix of 1000 markers
 liste <- sample(colnames(G),1000,replace=FALSE)
 K<-genMatrix(G[,liste])
 I<-diag(length(Y))
 hist(K$AA)
 ```
 
-## Compute the variance of each components ##
+## Compute the variance of each component ##
 
-This model estimate the additive and environnmental variance.
 ```{r}
+# This model estimates the additive and environnmental variance
 mod1<-estVC(y=Y,v=list(AA=K$AA,DD=NULL,HH=NULL,AD=NULL,MH=NULL,EE=I))
 mod1
-
-#Make loop for all markers selected
+# Make loop for all markers selected
 print(date())
 GWAS.mod1<-scanOne(y=Y,gdat=G,vc=mod1,test="Chisq")
 print(date())
 
-#Store p-value
+# Store p-value
 pval.mod1<-data.frame(marqueurs=colnames(G),pvalue=GWAS.mod1$p)
 varnom<-names(PG)[i]
 file<-paste("GRAINS_GWAS.mod1_",varnom,".Rdata", sep="") 
@@ -110,20 +108,15 @@ hist(-log10(assoc.mod1[,2]),
 
 ```{r}
 file_Phys_DRW<-"BREEDWHEAT_on_durum_physic.Rdata"
-
 # Name of the file --> BLAST
 load(file_Phys_DRW)
-
 names(BLAST)
 SNP_PHYS<-BLAST
 SNP_PHYS<-as.data.frame(SNP_PHYS)
 names(SNP_PHYS)
-
 Positif_280K<-merge(SNP_PHYS,assoc.mod1, by.x=1, by.y=1 )
 names(Positif_280K)
-
 Positif_280K
-
 ```
 
 
