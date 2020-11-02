@@ -10,7 +10,9 @@ library(QTLRel)
 library(qqman)
 library(igraph)
 ```
+
 ## Prepare phenotypic data ##
+
 ```{r}
 GRAINS<-read.table(file, header=TRUE, sep=";", dec=".")
 dim(GRAINS)
@@ -19,12 +21,9 @@ head(GRAINS,1)
 names(GRAINS)[1]<-"Code.unique.2010"
 # distributions of all variables 
 for ( i in 2:ncol(DATA)) { hist(DATA[,i], main=names(DATA)[i]) , freq= FALSE}
-
-#hist in pairs
+# hist in pairs
 pairs(DATA[,c(2:ncol(DATA) )])
-
-#Correlation traits, Outlier , replace outlier by NA and delete NA values ####
-```{r}
+# Correlation traits, Outlier , replace outlier by NA and delete NA values #
 cor(DATA[,-1], DATA[,"Zn"], use="pairwise.complete.obs")
 cor(DATA[,-1], DATA[,"Fe"], use="pairwise.complete.obs")
 DATA[which(DATA$Zn.Fe > 4 ),]
@@ -59,19 +58,16 @@ biplot(fit)
 ```{r}
 load("G_EPO.Rdata")
 dim(G_EPO)
-##Compute minor allelic frequency 
+# Compute minor allelic frequency 
 Freq_EPO<-freqall(G_EPO)
 hist(Freq_EPO, main="Distribution of minor  allelic")
-
 # Delete Minor allelic frequency for 5% threshold
 MAF<-which(Freq_EPO<0.05|Freq_EPO>0.95)
 G_EPO<-G_EPO[,-MAF]
 dim(G_EPO)
-
 # QTL Rel request AA, BB et AB format
 GA<-G_EPO
 GA<-as.matrix(GA)
-
 GA[which(GA==0)]<-"AA"
 GA[which(GA==1)]<-"AB"
 GA[which(GA==2)]<-"BB"
