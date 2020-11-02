@@ -2,8 +2,8 @@
 ## Glup Cross model
 ```{r}
 rm(list=ls()); gc()
-K<-read.csv("kinship_okTNS.csv", sep=";", h=T,row.names = 1)# kinship matrix
-table<-read.csv("QDFF.reel.csv", sep=";", dec=".")## data pheno
+K<-read.csv("kinship_okTNS.csv", sep=";", h=T,row.names = 1) # kinship matrix
+table<-read.csv("QDFF.reel.csv", sep=";", dec=".") # data pheno
 table$Material<-as.factor(table$Material)
 table<-OLE
 summary(table)
@@ -23,17 +23,17 @@ anss <- mmer(OLE~1,
              rcov=~units,
              data=table)
 
-pin(anss , h2 ~ (V1+V2) / ( V1+V2+V3) )###0.60
+pin(anss , h2 ~ (V1+V2) / ( V1+V2+V3) ) # 0.60
 
 summary(anss)$varcomp
-##h2 femelle
+# h2 femelle
 vt<-summary(anss2)$varcomp
 F<-as.data.frame(anss$U$`u:FEMALE`)
 M<-as.data.frame(anss$U$`u:MALE`)
-#write.table(F, file="F.U.csv", sep=";")
-#write.table(M, file="M.U.csv", sep=";")
+# write.table(F, file="F.U.csv", sep=";")
+# write.table(M, file="M.U.csv", sep=";")
 
-##Cross validation
+# Cross validation
 y.trn<-table
 vv1 <- which(!is.na(table$OLE))
 vv2 <- sample(vv1, 28)
