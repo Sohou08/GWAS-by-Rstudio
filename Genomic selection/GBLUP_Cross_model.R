@@ -1,5 +1,5 @@
 
-## Glup Cross model
+# Glup Cross model
 ```{r}
 rm(list=ls()); gc()
 K<-read.csv("kinship_okTNS.csv", sep=";", h=T,row.names = 1) # kinship matrix
