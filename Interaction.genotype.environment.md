@@ -1,31 +1,35 @@
-## Library 
-#library(dplyr)
-#library(FactoMineR)
+# Interaction Genotype ~ Environment Study #
 
-## Description data, manage NA ##
+## Library 
 
 ```{r}
-rm(list=ls())
+rm(list=ls()); gc()
+library(dplyr)
+library(FactoMineR)
+```
+
+## Data description, manage NA ##
+
+```{r}
 data<-read.table("rapeseed_data_hybrides_techno.csv", sep=";", dec=".", h=T)
 summary(data)
 for (i in c(1:7)) { data[,i]<-as.factor(data[,i])}
 data<-data%>%filter(!is.na(trait))%>%droplevels
-data<-data%>%filter(!is.na(CU))%>%droplevels ## CU is the environment
+data<-data%>%filter(!is.na(CU))%>%droplevels # CU is the environment
 hist(data$trait)
 plot(trait~ YEAR, data)
-year<-unique(data$YEAR  )
+year<-unique(data$YEAR)
 
-# Characterization of environment in each year 
-list=c("2018")## Choice one year
+list=c("2018") # Choice one year
 data_2018<-data[data$YEAR%in%list,]
 # Consider Environment as combination between site and year  
 IQDFF<-as.data.frame(tapply(data$trait, list(data$MATERIAL, data$CU), mean,row.names=T))
 IQDFF[1:2,1:2]
 
-#Filter NA
+# Filter NA
 x<-as.matrix(apply(IQDFF,1,function(x) sum(is.na(x))/length(x)))
 colnames(x)<-"%NAM"
-sokhna<-cbind(IQDFF ,x)
+sokhna<-cbind(IQDFF,x)
 sokhna[1:3,1:3]
 dax<-subset(sokhna, sokhna$`%NAM`<0.50)
 y<-as.matrix(apply(dax,2,function(x) sum(is.na(x))/length(x)))
@@ -39,32 +43,33 @@ Soh=dax_F
 Nb<-as.data.frame(apply(Soh,1,function(x) sum(is.na(x))))
 colnames(Nb)<-"NbNA"
 dim(Soh)
-dady<-(sum(Nb)/(nrow(Soh)*ncol(Soh)))*100###
+dady<-(sum(Nb)/(nrow(Soh)*ncol(Soh)))*100
 write.table(Soh, file="traitIGxE.csv", sep=";")
 
 # Imputation NA 
 library(missForest)
 data<-missForest(Soh)
-data$OOBerror #criterion NRMSE is used to evaluate the precision of the imputation
-test<-data$ximp ## extract inputed data
+data$OOBerror # criterion NRMSE is used to evaluate the precision of the imputation
+test<-data$ximp # extract inputed data
 one<-t(test)
 ```
 
-#### Typology of environments
+## Typology of environments
+
 ```{r}
 cs<-scale(one, center = TRUE, scale = TRUE) 
 d1<- dist(cs, method = "euclidean") 
 fit<- hclust(d1) # 
 plot(fit) # 
-plot<-heatmap(as.matrix(test), Colv = NA, Rowv = NA, scale="row", xlab="environnement", ylab="mat?riel", main="heatmap")
+plot<-heatmap(as.matrix(test), Colv = NA, Rowv = NA, scale="row", xlab="environnement", ylab="material", main="heatmap")
 ```
 
-#### ECOVALENCE
+## ECOVALENCE
 ```{r}
-IQFF<-as.matrix(Soh) ##Soh is the matrix having the mean of each genotype in each environment
+IQFF<-as.matrix(Soh) # Soh is the matrix having the average of each genotype from each environment
 nblieu<-ncol(IQFF)
 nbgeno<-nrow(IQFF)
-Ige<-matrix(0, nrow=nbgeno, ncol=nblieu)## Matrix name of interaction GxE
+Ige<-matrix(0, nrow=nbgeno, ncol=nblieu) # Matrix of GxE interaction
 
 for(i in 1:nbgeno)
   for(j in 1:nblieu)
@@ -82,8 +87,7 @@ names(Ecovalence_Env) <- colnames(Eco)
 Ecovalence_geno <- rep(0, nrow(Eco))
 names(Ecovalence_geno) <- rownames(Eco)
 
-
-## compute ecovalence
+# compute ecovalence
 for(i in 1:nbgeno)
   Ecovalence_geno[i] <- sum(Eco[i,])
 for(j in 1:nblieu)
@@ -92,9 +96,9 @@ for(j in 1:nblieu)
 Eco_Env<-as.data.frame(Ecovalence_Env)
 Eco_Env$Env<-colnames(Soh)
 Eco_geno<-as.data.frame(Ecovalence_geno)
-Eco_geno$geno<-paste("G", 1:nbgeno, sep="")#
+Eco_geno$geno<-paste("G", 1:nbgeno, sep="")
 
-## Compare the value of each ecovalence and their mean environment or genotype 
+# Compare the value of each ecovalence and their respective average of genotype and environment  
 
 meanEnv<-as.data.frame(colMeans(soh))
 colnames(meanEnv)<-"mean"
@@ -106,7 +110,7 @@ colnames(meanGen)<-"mean"
 row.names(meanGen)<-row.names(Soh)
 meanGen$geno<-row.names(meanGen)
 
-##Ecovalence_environment 
+# Ecovalence_environment 
 P<-Eco_Env%>%
   mutate(Env = fct_reorder(Env, Ecovalence_Env)) %>%
   ggplot( aes(x=Env, y=Ecovalence_Env)) +
@@ -177,7 +181,7 @@ text(moy_ind, coord_ind[,1], labels=names(moy_ind), cex=0.8, pos=3, offset=0.3)
 abline(h=0, lty=2)
 abline(v=mean(moy_ind), lty=2)
 
-## 
+# Plot 
 plot(moy_env, coord_var[,1], pch=16, xlab="Valeur moyenne des env",
      ylab="AMMI-CP1", ylim=c(-70,70))
 text(moy_env, coord_var[,1], labels=names(moy_env), cex=0.8, pos=3, offset=0.3)
@@ -188,7 +192,7 @@ abline(v=mean(moy_env), lty=2)
 ## GGEBiplot
 ```{r}
 library(GGEBiplots)
-GGE<-GGEModel(Soh)### Soh is the matrix having the mean of each genotype in each environment
+GGE<-GGEModel(Soh) # Soh is the matrix having the mean of each genotype from each environment
 MeanStability(GGE)
 WhichWon(GGE)
 DiscRep(GGE)
